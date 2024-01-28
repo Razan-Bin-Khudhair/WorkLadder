@@ -21,9 +21,7 @@ struct LeaderboardPage_: View {
                         }
                     }
                 }
-        }
-
-    }
+        }    }
 }
 
 #Preview {
