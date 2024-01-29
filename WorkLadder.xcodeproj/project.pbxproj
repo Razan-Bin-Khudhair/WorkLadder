@@ -15,6 +15,8 @@
 		0CF62D2E2B61EB9B00EF500C /* TasksPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF62D2D2B61EB9B00EF500C /* TasksPage.swift */; };
 		0CF62D302B61EBC300EF500C /* LeaderboardPage .swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF62D2F2B61EBC300EF500C /* LeaderboardPage .swift */; };
 		0CF62D322B61EBFA00EF500C /* RewardPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF62D312B61EBFA00EF500C /* RewardPage.swift */; };
+		F4930FFF2B67D6E0008DDE75 /* CreateAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4930FFE2B67D6E0008DDE75 /* CreateAccount.swift */; };
+		F49310012B67D73B008DDE75 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49310002B67D73B008DDE75 /* SignIn.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,8 @@
 		0CF62D2D2B61EB9B00EF500C /* TasksPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksPage.swift; sourceTree = "<group>"; };
 		0CF62D2F2B61EBC300EF500C /* LeaderboardPage .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeaderboardPage .swift"; sourceTree = "<group>"; };
 		0CF62D312B61EBFA00EF500C /* RewardPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardPage.swift; sourceTree = "<group>"; };
+		F4930FFE2B67D6E0008DDE75 /* CreateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccount.swift; sourceTree = "<group>"; };
+		F49310002B67D73B008DDE75 /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,8 @@
 				0CF62D2D2B61EB9B00EF500C /* TasksPage.swift */,
 				0CF62D2F2B61EBC300EF500C /* LeaderboardPage .swift */,
 				0CF62D312B61EBFA00EF500C /* RewardPage.swift */,
+				F4930FFE2B67D6E0008DDE75 /* CreateAccount.swift */,
+				F49310002B67D73B008DDE75 /* SignIn.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -177,8 +183,10 @@
 				0CF62D302B61EBC300EF500C /* LeaderboardPage .swift in Sources */,
 				0CF62D2E2B61EB9B00EF500C /* TasksPage.swift in Sources */,
 				0CF62D322B61EBFA00EF500C /* RewardPage.swift in Sources */,
+				F4930FFF2B67D6E0008DDE75 /* CreateAccount.swift in Sources */,
 				0CF62D1D2B61DB0900EF500C /* ContentView.swift in Sources */,
 				0CF62D1B2B61DB0900EF500C /* WorkLadderApp.swift in Sources */,
+				F49310012B67D73B008DDE75 /* SignIn.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
