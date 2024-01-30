@@ -21,43 +21,44 @@ struct CreateAccount: View {
         VStack(alignment: .center) {
             
             Text("Sign up to get started!")
-            // .position(CGPoint(x: 20.0, y: 90.0))
-                .padding(.leading , -150)
+                .font(Font.custom("SF Pro", size: 24))
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color(red: 0.12, green: 0.14, blue: 0.17))
+                .frame(width: 280, alignment: .center)
+                .padding()
+            
             TextField("Username", text: $username)
                 .padding()
-                .frame(width: 320, height: 50)
+                .frame(width: 320, height: 60)
                 .background(Color.black.opacity(0.03))
                 .shadow(radius: 10)
                 .cornerRadius(10.0)
-            //  .position(CGPoint(x: 167.0, y: 14.0))
                 .padding(.horizontal , 90)
             
             TextField("Email", text: $email)
                 .padding()
-                .frame(width: 320, height: 50)
+                .frame(width: 320, height: 60)
                 .background(Color.black.opacity(0.03))
                 .shadow(radius: 10)
                 .cornerRadius(10.0)
-            // .position(CGPoint(x: 167.0, y: -35.0))
                 .padding(.horizontal , 90)
+                .keyboardType(.emailAddress)
             
             SecureField("Password", text: $password)
                 .padding()
-                .frame(width: 320, height: 50)
+                .frame(width: 320, height: 60)
                 .background(Color.black.opacity(0.03))
                 .shadow(radius: 10)
                 .cornerRadius(10.0)
-            //  .position(CGPoint(x: 167.0, y: -84.0))
                 .padding(.horizontal , 90)
             
             
             SecureField("Confirm your Password", text: $password)
                 .padding()
-                .frame(width: 320, height: 50)
+                .frame(width: 320, height: 60)
                 .background(Color.black.opacity(0.03))
                 .shadow(radius: 10)
                 .cornerRadius(10.0)
-            // .position(CGPoint(x: 167.0, y: -133.0))
                 .padding(.horizontal , 90)
             
             Button(action: {
@@ -73,11 +74,23 @@ struct CreateAccount: View {
                 .frame(width: 320, height: 60)
                 .background(Color.blue)
                 .cornerRadius(10)
-                // .position(CGPoint(x: 184.0, y: -90.0))
                 .padding()
                 
                 }
+            
         }.navigationTitle("Create Account")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            // Add your "Cancel" action here
+                        }) {
+                            Text("Cancel")
+                        }
+                    }
+
+                }
+
+
         }
     }
 }

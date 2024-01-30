@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignIn: View {
-   @State private var username = ""
+    @State private var username = ""
     @State  private var password = ""
     @State private var wrongUsername = 0
     @State private var wrongPassword = 0
@@ -19,125 +19,122 @@ struct SignIn: View {
     var body: some View {
         NavigationView{
             
-            
-            
+
             VStack(alignment: .center) {
-                
-                //QuickSignInWithApple()
-                    //.frame(width: 280, height: 60, alignment: .center)
-                  //  .position(CGPoint(x: 190.0, y: 190.0))
-                    //.padding()
-                
-                
+                Spacer()
                 Text("Sign in to get started")
                 
-                    .padding(.leading , -130)
-                
-                   // .position(CGPoint(x: 130.0, y: -490.0))
-                    .foregroundColor(Color.black.opacity(0.9))
-                    .padding( )
+                    .font(Font.custom("SF Pro", size: 24))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(Color(red: 0.12, green: 0.14, blue: 0.17))
+                    .frame(width: 280, alignment: .center)
+                    .padding()
                 
                 
                 ZStack{
-                   // Image(systemName: ("envelope"))
                     
-                    //    .padding(.leading , -140)
-                    
-                        
                     TextField("Enter your Email", text: $username)
-                    
+                        .font(Font.custom("SF Pro", size: 18))
                         .padding()
-                        .frame(width: 320, height: 50)
+                        .frame(width: 320, height: 60)
                         .background(Color.black.opacity(0.03))
                         .shadow(radius: 10)
                         .cornerRadius(10.0)
-
-                    // .position(CGPoint(x: 199.0, y: -190.0))
                         .border(.red, width: CGFloat(wrongUsername))
+                        .keyboardType(.emailAddress)
                     
                 }
                 
                 
                 ZStack{
                     
-                 //   Image(systemName: ("key"))
-                   //     .padding(.leading , -140)
-                    
+                
                     SecureField("Enter your Password", text: $password)
+                        .font(Font.custom("SF Pro", size: 18))
                         .padding()
-                        .frame(width: 320, height: 50)
+                        .frame(width: 320, height: 60)
                         .background(Color.black.opacity(0.03))
                         .shadow(radius: 10)
                         .cornerRadius(10.0)
-
-                    //.position(CGPoint(x: 199.0, y: -179.0))
                         .border(.red, width: CGFloat(wrongUsername))
-                        .padding()
+                    
                 }
                 
                 Button("Forgot Password?") {
                     
                 }
-                    .padding(.leading , 140)
-                    .bold()
-                   // .position(CGPoint(x: 279.0, y: -310.0))
-                    .foregroundColor(.blue)
+                
+                .padding(.leading , 140)
+                .bold()
+                .foregroundColor(.blue)
+                
+                Spacer()
                 
                 
                 
-                
-                Button("Create Account") {
-                    showCreatAccount.toggle()
-                }
+                Button {
+                    // showCreatAccount.toggle()
+                } label: {
+                Text("Login")
+                .font(Font.custom("SF Pro", size: 18))
                 .foregroundColor(.white)
                 .bold()
                 .frame(width: 320, height: 60)
                 .background(Color.blue)
                 .cornerRadius(10)
-              
+            }
                 
-                Button("Sign up with Apple") {
-                    showCreatAccount.toggle()
-                }
-                .foregroundColor(.white)
-                .bold()
-                .frame(width: 320, height: 60)
-                .background(Color.black)
-                .cornerRadius(10)
-                ZStack {
-                    Image(systemName: ("apple.logo"))
-                        .aspectRatio(contentMode: .fill)
-                        .foregroundColor(.black)
-                        .padding()
+                
+                Button  {
+                
+                } label: {
+                    HStack(spacing: 8){
+                        Image(systemName: ("apple.logo"))
+                            .foregroundColor(.white)
+                            .font(Font.custom("SF Pro", size: 20))
+                         
+                        
+                        Text("Sign up with Apple")
+                            .font(Font.custom("SF Pro", size: 18))
+                            .foregroundColor(.white)
+                            .bold()
+                        
+                    }
                     
-            
+                    .frame(width: 320, height: 60)
+                    .background(Color.black)
+                    .cornerRadius(10)
                 }
-                
-               // QuickSignInWithApple()
-                 //   .frame(width: 280, height: 60, alignment: .center)
-                 
-                   // .padding()
-                
-                
-                Text("Don't have an account?")
-                    .foregroundColor(Color.black.opacity(0.8))
-                    //.padding()
-                Button("Register Now") {
+
+                HStack (spacing: 5) {
                     
+                    Text("Don't have an account?")
+                        .foregroundColor(Color.black.opacity(0.8))
+                        .font(Font.custom("SF Pro", size: 15))
+                    
+                    Button {
+                        showCreatAccount.toggle()
+                    } label: {
+                        
+                        
+                        Text ("Register Now")
+                            .bold()
+                            .foregroundColor(.blue)
+                            .font(Font.custom("SF Pro", size: 15))
+                        
+                    }.sheet(isPresented: $showCreatAccount, content: {
+                        CreateAccount()
+                    })
                 }
-                    .bold()
-                    .foregroundColor(.blue)
-                    //.padding()
-               
-                
+                Spacer()
+                Spacer()
+                Spacer()
                 
                 
                 
                 
             }
-            .sheet(isPresented: $showCreatAccount, content: {
-                CreateAccount()
-            })
+            
             .navigationTitle("Sign In")
             
         }

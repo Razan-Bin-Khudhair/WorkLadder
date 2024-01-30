@@ -22,92 +22,90 @@ struct LeaderboardPage_: View {
         ProgressBox(gender: "M", name: "Charlie", points: 10)
     ]
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Leaderboard")
-                        .font(.title)
-                        .bold()
-                        .padding(.top, 10)
-                        .padding(.leading, 20)
-                    
-                    if email == "marya.as1@gmail.com" {
-                        Image(systemName: "plus")
-                            .foregroundColor(Color.blue)
-                            .font(.system(size: 25))
-                            .padding(.leading, 130)
-                            .padding(.top, 10)
-                            .onTapGesture {
-                                isSheetPresented.toggle()
-                            }
-                            .sheet(isPresented: $isSheetPresented) {
-                                // Content of the sheet goes here
-                                VStack {
-                                    HStack {
-                                        Text("Cancel")
-                                            .foregroundColor(Color.blue)
-                                            .padding()
-                                            .onTapGesture {
-                                                isSheetPresented.toggle()
-                                            }
-                                            .padding(.leading, -10)
-                                        
-                                        Spacer()
-                                        
-                                        Text("New Employee")
-                                            .font(.system(size: 19)).offset(x:-20)
-                                        
-                                        Spacer()
-                                        
-                                        Text("Add")
-                                            .foregroundColor(Color.blue)
-                                           // .padding()
-                                            .onTapGesture {
-                                                // Add employee to progressBoxes
-                                                progressBoxes.append(ProgressBox(gender: selectedGender, name: employeeName, points: 0))
-                                                isSheetPresented.toggle()
-                                            }.padding(.leading, -20)
-                                            .padding(.trailing, 20)
-                                    }.padding(.top,-360)
-                                    
-                                    TextField("Name", text: $employeeName)
-                                        .padding()
-                                        .background(Color.gray.opacity(0.1))
-                                        .cornerRadius(10)
-                                        .padding(.top, -260)
-                                    
-                                    TextField("Email", text: $employeeEmail)
-                                        .padding()
-                                        .background(Color.gray.opacity(0.1))
-                                        .cornerRadius(10)
-                                        .padding(.top, -200)
-                                    
-                                    Picker("Gender", selection: $selectedGender) {
-                                        Text("Female").tag("F")
-                                        Text("Male").tag("M")
-                                    }
-                                    .pickerStyle(SegmentedPickerStyle())
-                                    .padding(.top, -140)
-                                }
-                                .padding()
-                            }
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading) {
+                    VStack {
+                        Spacer().frame(height: 40)
+                        
+                        ForEach(progressBoxes.sorted(by: { $0.points > $1.points })) { progressBox in
+                            progressBox
+                        }
                     }
+                    .padding(.top, 10)
                 }
-                
-                VStack {
-                    Spacer().frame(height: 40)
-                    
-                    ForEach(progressBoxes.sorted(by: { $0.points > $1.points })) { progressBox in
-                        progressBox
-                    }
-                }
-                .padding(.top, 10)
+                .padding()
             }
-            .padding()
+            
+            .navigationTitle("Leaderboard")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        // Add your action here
+                        if email == "marya.as1@gmail.com" {
+                            isSheetPresented.toggle()
+                        }
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                    .sheet(isPresented: $isSheetPresented) {
+                        // Content of the sheet goes here
+                        VStack {
+                            HStack {
+                                Text("Cancel")
+                                    .foregroundColor(Color.blue)
+                                    .padding()
+                                    .onTapGesture {
+                                        isSheetPresented.toggle()
+                                    }
+                                
+                                Spacer()
+                                
+                                Text("New Employee")
+                                    .font(.system(size: 19))
+                                    .offset(x: -20)
+                                
+                                Spacer()
+                                
+                                Text("Add")
+                                    .foregroundColor(Color.blue)
+                                    .onTapGesture {
+                                        // Add employee to progressBoxes
+                                        progressBoxes.append(ProgressBox(gender: selectedGender, name: employeeName, points: 0))
+                                        isSheetPresented.toggle()
+                                    }
+                                    .padding(.leading, -20)
+                                    .padding(.trailing, 20)
+                            }
+                            .padding(.top, -360)
+                            
+                            TextField("Name", text: $employeeName)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(10)
+                                .padding(.top, -260)
+                            
+                            TextField("Email", text: $employeeEmail)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(10)
+                                .padding(.top, -200)
+                            
+                            Picker("Gender", selection: $selectedGender) {
+                                Text("Female").tag("F")
+                                Text("Male").tag("M")
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                            .padding(.top, -140)
+                        }
+                        .padding()
+                    }
+                    .disabled(email != "marya.as1@gmail.com") // Disable the button if the condition is not met
+                }
+            }
+
+            
         }
-
-
-
     }
 }
 
@@ -121,19 +119,17 @@ struct ProgressBar: View {
         ZStack(alignment: .leading) {
             Capsule().fill(Color("gray"))
                 .frame(width: 230, height: 15)
-            
+
             ZStack {
                 Capsule().fill(Color("purple"))
                     .frame(width: width * 0.6, height: 15)
-                
-             //   HStack {
-                    Image(systemName: "gift.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.white)
-                        //.padding(.trailing, CGFloat(points) * 2)
-               // }
+
+                Image(systemName: "gift.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.white)
+                    .offset(x: width * 0.3 - 10) // Adjust the offset based on the width of the purple progress bar
             }
         }
     }
