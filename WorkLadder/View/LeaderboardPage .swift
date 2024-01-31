@@ -13,21 +13,21 @@ struct LeaderboardPage_: View {
     @State private var employeeName = ""
     @State private var employeeEmail = ""
     @State private var selectedGender = "M"
-    
-    
+
     @State private var progressBoxes: [ProgressBox] = [
         ProgressBox(gender: "F", name: "Alice", points: 30),
         ProgressBox(gender: "M", name: "Bob", points: 40),
         ProgressBox(gender: "F", name: "Eve", points: 50),
         ProgressBox(gender: "M", name: "Charlie", points: 10)
     ]
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading) {
                     VStack {
                         Spacer().frame(height: 40)
-                        
+
                         ForEach(progressBoxes.sorted(by: { $0.points > $1.points })) { progressBox in
                             progressBox
                         }
@@ -36,7 +36,7 @@ struct LeaderboardPage_: View {
                 }
                 .padding()
             }
-            
+
             .navigationTitle("Leaderboard")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -48,63 +48,11 @@ struct LeaderboardPage_: View {
                     }) {
                         Image(systemName: "plus")
                     }
-                    .sheet(isPresented: $isSheetPresented) {
-                        // Content of the sheet goes here
-                        VStack {
-                            HStack {
-                                Text("Cancel")
-                                    .foregroundColor(Color.blue)
-                                    .padding()
-                                    .onTapGesture {
-                                        isSheetPresented.toggle()
-                                    }
-                                
-                                Spacer()
-                                
-                                Text("New Employee")
-                                    .font(.system(size: 19))
-                                    .offset(x: -20)
-                                
-                                Spacer()
-                                
-                                Text("Add")
-                                    .foregroundColor(Color.blue)
-                                    .onTapGesture {
-                                        // Add employee to progressBoxes
-                                        progressBoxes.append(ProgressBox(gender: selectedGender, name: employeeName, points: 0))
-                                        isSheetPresented.toggle()
-                                    }
-                                    .padding(.leading, -20)
-                                    .padding(.trailing, 20)
-                            }
-                            .padding(.top, -360)
-                            
-                            TextField("Name", text: $employeeName)
-                                .padding()
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(10)
-                                .padding(.top, -260)
-                            
-                            TextField("Email", text: $employeeEmail)
-                                .padding()
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(10)
-                                .padding(.top, -200)
-                            
-                            Picker("Gender", selection: $selectedGender) {
-                                Text("Female").tag("F")
-                                Text("Male").tag("M")
-                            }
-                            .pickerStyle(SegmentedPickerStyle())
-                            .padding(.top, -140)
-                        }
-                        .padding()
-                    }
-                    .disabled(email != "marya.as1@gmail.com") // Disable the button if the condition is not met
                 }
             }
-
-            
+            .sheet(isPresented: $isSheetPresented) {
+                AddEmployeeSheetView(isSheetPresented: $isSheetPresented, progressBoxes: $progressBoxes)
+            }
         }
     }
 }
@@ -134,6 +82,63 @@ struct ProgressBar: View {
         }
     }
 }
+
+struct AddEmployeeSheetView: View {
+    @Binding var isSheetPresented: Bool
+    @Binding var progressBoxes: [ProgressBox]
+    @State private var employeeName = ""
+    @State private var employeeEmail = ""
+    @State private var selectedGender = "M"
+
+    var isAddButtonDisabled: Bool {
+        return employeeName.isEmpty || employeeEmail.isEmpty
+    }
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("New Employee")) {
+                    TextField("Name", text: $employeeName)
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+
+                    TextField("Email", text: $employeeEmail)
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+
+                    Picker("Gender", selection: $selectedGender) {
+                        Text("Female").tag("F")
+                        Text("Male").tag("M")
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
+                .padding(5)
+            }
+            .navigationTitle("Add Employee")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(
+                leading: Button(action: {
+                    isSheetPresented.toggle()
+                }) {
+                    Text("Cancel")
+                },
+                trailing: Button(action: {
+                    // Add employee to progressBoxes
+                    progressBoxes.append(ProgressBox(gender: selectedGender, name: employeeName, points: 0))
+                    isSheetPresented.toggle()
+                }) {
+                    Text("Add")
+                        .foregroundColor(isAddButtonDisabled ? Color.gray : Color.blue)
+                        // You can also modify other button properties, e.g., background, font, etc.
+                }
+                .disabled(isAddButtonDisabled)
+            )
+        }
+    }
+}
+
 
 
 

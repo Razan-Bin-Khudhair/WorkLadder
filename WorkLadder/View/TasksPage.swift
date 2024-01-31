@@ -26,47 +26,45 @@ struct TasksPage: View {
     @State private var newTaskStatus = 0
     
     var body: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Text("Tasks Management")
-                    .font(.system(size: 28))
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Spacer()
-                
-                Button(action: {
-                    isPresentingAddTaskSheet = true
-                }) {
-                    Image(systemName: "plus")
-                        .font(.title)
+        NavigationView{
+            ZStack {
+                VStack {
+     
+                    
+                    Picker(selection: $newTaskStatus, label: Text("Select Status")) {
+                        Text("To do").tag(0)
+                        Text("In progress").tag(1)
+                        Text("Done").tag(2)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
+                   // Spacer()
+                    ScrollView {
+                        Spacer()
+                        ForEach(tasks) { task in
+                            if task.status == getStatusTitle(newTaskStatus) {
+                                RectangleView(task: task, status: $tasks[getIndex(for: task)].status)
+                                    .padding(10)
+                            }
+                        }
+                        Spacer()
+                    }
+                  //  Spacer()
                 }
-                .padding(.trailing)
-                .sheet(isPresented: $isPresentingAddTaskSheet) {
-                    AddTaskView(isPresented: $isPresentingAddTaskSheet, tasks: $tasks)
-                }
-                
-            }
-            
-            Picker(selection: $newTaskStatus, label: Text("Select Status")) {
-                Text("To do").tag(0)
-                Text("In progress").tag(1)
-                Text("Done").tag(2)
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
-            
-            ScrollView {
-                ForEach(tasks) { task in
-                    if task.status == getStatusTitle(newTaskStatus) {
-                        RectangleView(task: task, status: $tasks[getIndex(for: task)].status)
+            }.navigationTitle("Tasks Management")
+             .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            isPresentingAddTaskSheet = true
+                        }) {
+                            Image(systemName: "plus")
+                        }.sheet(isPresented: $isPresentingAddTaskSheet) {
+                            AddTaskView(isPresented: $isPresentingAddTaskSheet, tasks: $tasks)
+                        }
                     }
                 }
-            }
-            Spacer()
         }
-        
-        .padding()
+       
     }
     
     func getIndex(for task: Task) -> Int {
@@ -103,76 +101,82 @@ struct RectangleView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(task.title)
-                .font(.title3)
-                .fontWeight(.bold)
-                .padding(.leading)
+        ZStack{
             
-            Text(task.description)
-                .font(.caption)
-                .foregroundColor(.gray)
-                .padding(.leading)
-            
-            HStack {
-                Button(action: {
-                    isShowingDatePicker = true
-                }) {
-                    HStack {
-                        Image(systemName: "calendar.badge.clock")
-                            .font(.system(size: 14))
-                        Text(dateFormatter.string(from: selectedDueDate))
-                            .foregroundColor(.black)
-                            .font(.system(size: 12))
-                    }
-                }
-                .buttonStyle(RectangleButtonStyle())
-                .sheet(isPresented: $isShowingDatePicker) {
-                    DatePicker(selection: $selectedDueDate, displayedComponents: .date) {
-                        Text("Select Due Date")
-                    }
-                }
+            VStack(alignment: .leading, spacing: 15) {
+                Text(task.title)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .padding(.leading)
                 
-                Menu {
-                    ForEach(["To Do", "In Progress", "Done"], id: \.self) { option in
-                        Button(action: {
-                            status = option
-                        }) {
-                            HStack {
-                                Image(systemName: getStatusImageName(for: option))
-                                    .foregroundColor(getStatusColor(for: option))
-                                    .font(.title3)
-                                Text(option)
-                                    .font(.system(size: 12))
-                            }
-                            .buttonStyle(RectangleButtonStyle())
-                            
+                Text(task.description)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.leading)
+                
+                HStack {
+                    Button(action: {
+                        isShowingDatePicker = true
+                    }) {
+                        HStack {
+                            Image(systemName: "calendar.badge.clock")
+                                .font(.system(size: 14))
+                            Text(dateFormatter.string(from: selectedDueDate))
+                                .foregroundColor(.black)
+                                .font(.system(size: 12))
                         }
                     }
-                } label: {
-                    HStack {
-                        Image(systemName: getStatusImageName(for: status))
-                            .foregroundColor(getStatusColor(for: status))
-                            .font(.title3)
-                        Text(status)
-                            .font(.system(size: 12))
+                    .buttonStyle(RectangleButtonStyle())
+                    .sheet(isPresented: $isShowingDatePicker) {
+                        DatePicker(selection: $selectedDueDate, displayedComponents: .date) {
+                            Text("Select Due Date")
+                        }
+                    }
+                    
+                    Menu {
+                        ForEach(["To Do", "In Progress", "Done"], id: \.self) { option in
+                            Button(action: {
+                                status = option
+                            }) {
+                                HStack {
+                                    Image(systemName: getStatusImageName(for: option))
+                                        .foregroundColor(getStatusColor(for: option))
+                                        .font(.title3)
+                                    Text(option)
+                                        .font(.system(size: 12))
+                                }
+                                .buttonStyle(RectangleButtonStyle())
+                                
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: getStatusImageName(for: status))
+                                .foregroundColor(getStatusColor(for: status))
+                                .font(.title3)
+                            Text(status)
+                                .font(.system(size: 12))
+                        }
+                        .buttonStyle(RectangleButtonStyle())
                     }
                     .buttonStyle(RectangleButtonStyle())
+                    Spacer()
+                    
+                    CircleWithRectangle(color: getPriorityColor(), text: task.priority)
+                    
                 }
-                .buttonStyle(RectangleButtonStyle())
-                Spacer()
-                
-                CircleWithRectangle(color: getPriorityColor(), text: task.priority)
-                
+               .padding(.horizontal)
             }
-            .padding(.horizontal)
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.gray.opacity(0.6), lineWidth: 1)
-                .shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 1)
-        )
+        }        .padding()
+        
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundColor(.white)
+                    .frame(width: 360, height: 137, alignment: .center)
+                    .shadow(color: Color.gray, radius: 5, x: 0, y: 0)
+                    
+                    
+            )
     }
     
     func getStatusImageName(for status: String) -> String {
@@ -282,7 +286,9 @@ struct AddTaskView: View {
                 Section(header: Text("Task Details")) {
                     TextField("Title", text: $newTaskTitle)
                     TextField("Description", text: $newTaskDescription)
+
                 }
+               
                 
                 Section(header: Text("Priority")) {
                     Picker(selection: $selectedPriority, label: Text("Select Priority")) {
@@ -298,8 +304,19 @@ struct AddTaskView: View {
 //                    DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
                     DatePicker("Due Date", selection: $DueDate, displayedComponents: .date)
                 }
+                
+                Section(header: Text("Employee")) {
+                    Picker(selection: $selectedPriority, label: Text("Name")) {
+                        Text("").tag("")
+                        Text("").tag("")
+                        Text("").tag("")
+                        
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                }
             }
             .navigationTitle("New Task")
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button(action: {
                     isPresented = false

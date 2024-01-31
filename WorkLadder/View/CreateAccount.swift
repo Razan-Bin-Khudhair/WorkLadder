@@ -79,6 +79,7 @@ struct CreateAccount: View {
                 }
             
         }.navigationTitle("Create Account")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
