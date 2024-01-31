@@ -18,7 +18,7 @@ struct Task: Identifiable {
     let priority: String // Add priority property
 }
 
-struct TasksPage: View {
+struct TasksPageAdmin: View {
     @State private var tasks: [Task] = []
     @State private var isPresentingAddTaskSheet = false
     @State private var newTaskTitle = ""
@@ -351,7 +351,7 @@ struct AddTaskView: View {
 }
 
 #Preview {
-    TasksPage()
+    TasksPageAdmin()
 }
 
 

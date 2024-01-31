@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct mangerView: View {
+struct RewardPageAdmin: View {
     @State private var showAlert = false
     @State private var userScore = 100 // Set the user's score here
     @State private var isAddRewardSheetPresented = false
@@ -153,7 +153,7 @@ struct Reward: Identifiable {
 
 struct mangerView_Previews: PreviewProvider {
     static var previews: some View {
-        mangerView()
+        RewardPageAdmin()
     }
 }
 

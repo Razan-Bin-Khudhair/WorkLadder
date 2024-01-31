@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LeaderboardPage_: View {
+struct LeaderboardPageAdmin: View {
     @State private var isSheetPresented = false
     @State private var email = "marya.as1@gmail.com"
     @State private var employeeName = ""
@@ -206,5 +206,5 @@ struct ProgressBox: View, Identifiable  {
 
 
 #Preview {
-    LeaderboardPage_()
+    LeaderboardPageAdmin()
 }

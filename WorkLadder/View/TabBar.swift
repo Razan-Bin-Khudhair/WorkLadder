@@ -14,7 +14,7 @@ struct TabBar: View {
     var body: some View {
         TabView(selection: $selectedTab) {
           
-            TasksPage()
+            TasksPageAdmin()
             
                 .tag(0)
                 .tabItem {
@@ -22,7 +22,7 @@ struct TabBar: View {
                     Text("Tasks")
                 }
             
-            LeaderboardPage_()
+            LeaderboardPageAdmin()
                 .tag(1)
                 .tabItem {
                     Image(systemName: "flag.checkered")
@@ -30,7 +30,7 @@ struct TabBar: View {
                 }
             
             
-            RewardPage()
+            RewardPageEmployee()
                 .tag(2)
                 .tabItem {
                     Image(systemName: "gift.fill")

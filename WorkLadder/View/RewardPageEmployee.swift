@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct RewardPage: View {
+struct RewardPageEmployee: View {
     @State private var showAlert = false
     @State private var userScore = 100 // Set the user's score here
     var rewards: [UserReward] = [
@@ -115,6 +115,6 @@ struct UserReward: Identifiable {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        RewardPage()
+        RewardPageEmployee()
     }
 }
