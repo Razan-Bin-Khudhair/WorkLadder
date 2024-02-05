@@ -15,19 +15,50 @@ struct LeaderboardPageAdmin: View {
     @State private var selectedGender = "M"
 
     @State private var progressBoxes: [ProgressBox] = [
-        ProgressBox(gender: "F", name: "Alice", points: 30),
-        ProgressBox(gender: "M", name: "Bob", points: 40),
-        ProgressBox(gender: "F", name: "Eve", points: 50),
-        ProgressBox(gender: "M", name: "Charlie", points: 10)
+        ProgressBox(gender: "F", name: "Razan", points: 0),
+        ProgressBox(gender: "F", name: "Rima", points: 40),
+        ProgressBox(gender: "F", name: "Mariyyah", points: 50),
+        ProgressBox(gender: "F", name: "Sarah", points: 10),
+        ProgressBox(gender: "F", name: "Shahad", points: 10)
     ]
 
     var body: some View {
+        
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading) {
                     VStack {
-                        Spacer().frame(height: 40)
-
+                       // Spacer().frame(height: 40)
+                        HStack(spacing: 4) {
+                            Spacer()
+                            
+                            Group{
+                                Circle()
+                                    .fill(.green)
+                                    .frame(width: 19, height: 19)
+                                Text("10 points")
+                            }
+                            
+                            Spacer()
+                            
+                            Group{
+                                Circle()
+                                    .fill(.orange)
+                                    .frame(width: 19, height: 19)
+                                Text("20 points")
+                            }
+                            
+                            Spacer()
+                            
+                            Group {
+                                Circle()
+                                    .fill(.red)
+                                    .frame(width: 19, height: 19)
+                                Text("30 points")
+                            }
+                            
+                            Spacer()
+                        }
                         ForEach(progressBoxes.sorted(by: { $0.points > $1.points })) { progressBox in
                             progressBox
                         }
@@ -77,7 +108,7 @@ struct ProgressBar: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 20, height: 20)
                     .foregroundColor(.white)
-                    .offset(x: width * 0.3 - 10) // Adjust the offset based on the width of the purple progress bar
+                    .offset(x: width * 0.3 - 10)
             }
         }
     }
@@ -179,7 +210,7 @@ struct ProgressBox: View, Identifiable  {
                 }
                 
                 VStack(alignment: .leading){
-                    ProgressBar(width: CGFloat(points) * 2, points: points) // Pass points to ProgressBar
+                    ProgressBar(width: CGFloat(points) * 4, points: points) // Pass points to ProgressBar
                         .padding(.trailing, 10)
                         .padding(.bottom, -90)
                     

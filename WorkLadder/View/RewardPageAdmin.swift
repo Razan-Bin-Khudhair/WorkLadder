@@ -5,206 +5,220 @@
 //  Created by sarah alothman on 18/07/1445 AH.
 //
 
+import Photos
+import PhotosUI
 import SwiftUI
+import UIKit
 
-struct RewardPageAdmin: View {
-    @State private var showAlert = false
-    @State private var userScore = 100 // Set the user's score here
-    @State private var isAddRewardSheetPresented = false
-    @State private var newScore = ""
-    @State private var newReward = ""
+struct Reward: Identifiable {
+    let id = UUID()
+    let name: String
+    let image: UIImage
+    let priority: String
+}
+
+class RewardManager: ObservableObject {
+    @Published var rewards: [Reward] = []
+}
+
+struct aa: View {
+    @State private var showAddRewardSheet = false
+    @State private var newRewardName = ""
+    @State private var selectedPriority = "High"
     @State private var selectedImage: UIImage?
-    @State private var isImagePickerPresented = false
+ 
 
-    var rewards: [Reward] = [
-        Reward(id: 1, name: "Reward 1", imageName: "Apple", pointsRequired: 100),
-        Reward(id: 2, name: "Reward 2", imageName: "Apple", pointsRequired: 90),
-        Reward(id: 3, name: "Reward 3", imageName: "Apple", pointsRequired: 200),
-        Reward(id: 4, name: "Reward 4", imageName: "Lock", pointsRequired: 250),
-        Reward(id: 5, name: "Reward 5", imageName: "Apple", pointsRequired: 300),
-        Reward(id: 6, name: "Reward 6", imageName: "Lock", pointsRequired: 310),
-        // Add more rewards with their respective pointsRequired
-    ]
+    @ObservedObject var rewardManager = RewardManager()
 
     var body: some View {
         NavigationView {
-            VStack {
-                ScrollView {
-                    Text("Rewards Management")
-                        .font(.system(size: 30))
-                        .font(.title)
-                        .bold()
-                        .offset(x: -10, y: -35)
-
-                    // Display all rewards
-                    ForEach(rewards) { reward in
-                        if userScore >= reward.pointsRequired {
-                            RectangleRow()
-                                .padding(.bottom, -40)
-                        } else {
-                            LockedRectangleRow()
-                                .padding(.bottom, -40)
-                        }
+            
+            ScrollView {
+                Spacer()
+                Spacer()
+                LazyVGrid(columns: [GridItem(.flexible())], spacing: 0) {
+                    ForEach(rewardManager.rewards) { reward in
+                        RewardCell(reward: reward)
                     }
-                }
+                }//.padding()
+               // Spacer()
             }
+           
+
+            .navigationBarTitle("Rewards Management")
             .navigationBarItems(trailing:
                 Button(action: {
-                    isAddRewardSheetPresented.toggle()
+                    self.showAddRewardSheet.toggle()
                 }) {
                     Image(systemName: "plus")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.blue)
                 }
             )
-            .navigationBarTitle("", displayMode: .inline)
-            .sheet(isPresented: $isAddRewardSheetPresented) {
-                NavigationView {
-                    VStack {
-                        Form {
-                            Section(header:
-                                HStack {
-                                    Spacer()
-                                    Button("Cancel") {
-                                        isAddRewardSheetPresented.toggle()
-                                    }
-                                    .font(.system(size: 15))
-                                    .offset(x:-240,y: -50)
-                                    .foregroundColor(.blue)
-                                
-                                
-                                Button("Add") {
-                                    isAddRewardSheetPresented.toggle()
-                                }
-                                .font(.system(size: 15))
-                                .offset(x:20,y: -50)
-                                .foregroundColor(.blue)
-                                }
-                            ) {
-                                TextField("Score", text: $newScore)
-                                    .keyboardType(.numberPad)
-                                TextField("Reward", text: $newReward)
-                                Button(action: {
-                                    isImagePickerPresented.toggle()
-                                }) {
-                                    HStack {
-                                        Text("Upload Photo")
-                                        Spacer()
-                                        Image(systemName: "photo")
-                                    }
-                                }
-                            }
-                        }
-                        .imagePicker(isPresented: $isImagePickerPresented, selectedImage: $selectedImage)
-                        .navigationBarTitle("New Reward", displayMode: .inline)
-                    }
-                }
+            .sheet(isPresented: $showAddRewardSheet) {
+                AddRewardView(rewardManager: rewardManager,
+                              isPresented: $showAddRewardSheet,
+                              selectedPriority: $selectedPriority,
+                              selectedImage: $selectedImage)
             }
         }
     }
 }
 
-struct RectangleRow: View {
-    var body: some View {
-        Button(action: {
-            // Handle the action for unlocked reward
-        }, label: {
-            ZStack {
-                Image("Apple")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.white)
-            }
-        })
-    }
-}
-
-struct LockedRectangleRow: View {
-    @State private var showAlert = false
-
-    var body: some View {
-        Button(action: {
-            showAlert.toggle()
-        }, label: {
-            ZStack {
-                Image("Lock")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.white)
-            }
-        })
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("Insufficient Points"),
-                message: Text("Your points are not enough."),
-                dismissButton: .default(Text("OK"))
-            )
-        }
-    }
-}
-
-struct Reward: Identifiable {
-    let id: Int
-    let name: String
-    let imageName: String
-    let pointsRequired: Int
-}
-
-struct mangerView_Previews: PreviewProvider {
-    static var previews: some View {
-        RewardPageAdmin()
-    }
-}
-
-extension Form {
-    func imagePicker(isPresented: Binding<Bool>, selectedImage: Binding<UIImage?>) -> some View {
-        modifier(ImagePicker(isPresented: isPresented, selectedImage: selectedImage))
-    }
-}
-
-struct ImagePicker: ViewModifier {
+struct AddRewardView: View {
+    @ObservedObject var rewardManager: RewardManager
     @Binding var isPresented: Bool
+    @State private var showImagePicker = false
+    @State private var newRewardName: String = ""
+    @Binding var selectedPriority: String
     @Binding var selectedImage: UIImage?
 
-    func body(content: Content) -> some View {
-        content.sheet(isPresented: $isPresented) {
-            ImagePickerView(selectedImage: $selectedImage)
+    // Define the priority options
+    let priorityOptions = ["High", "Medium", "Low"]
+
+    var body: some View {
+        NavigationView {
+                  Form {
+                      Section(header: Text("Reward Details")) {
+                          TextField("Reward Name", text: $newRewardName)
+                              
+                      }
+                    //  .listRowInsets(EdgeInsets(top: -20, leading: -10, bottom: -20, trailing: 10))
+
+
+
+                      Section(header: Text("Image")) {
+                          Button(action: {
+                              self.showImagePicker.toggle()
+                          }) {
+                              Text("Choose Image")
+                                  .frame(maxWidth: .infinity, maxHeight: 40)
+                                  .background(Color.white)
+                                  .foregroundColor(.blue)
+                                  .cornerRadius(8)
+                          }
+                          .sheet(isPresented: $showImagePicker) {
+                              ImagePicker(selectedImage: self.$selectedImage)
+                          }
+                      }
+
+                    /*  Section(header: Text("Priority")) {
+                          Picker("Priority", selection: $selectedPriority) {
+                              ForEach(priorityOptions, id: \.self) { option in
+                                  Text(option).tag(option)
+                              }
+                          }
+                          .pickerStyle(MenuPickerStyle())
+                         // .padding()
+                      }*/
+
+                     
+                  }
+                  .navigationBarTitle("Add Reward")
+                  .navigationBarTitleDisplayMode(.inline)
+                  .navigationBarItems(
+                      leading: Button(action: {
+                          isPresented = false
+                      }) {
+                          Text("Cancel")
+                      },
+                      trailing: Button(action: {
+                          if !newRewardName.isEmpty, let image = selectedImage {
+                              rewardManager.rewards.append(Reward(name: newRewardName,
+                                                                  image: image,
+                                                                  priority: selectedPriority))
+                              
+                              
+                              isPresented = false
+                         }
+                      }) {
+                          Text("Add")
+                      }
+                      
+                  )
         }
     }
 }
 
-struct ImagePickerView: UIViewControllerRepresentable {
+
+
+struct RewardCell: View {
+    let reward: Reward
+
+    var body: some View {
+        VStack {
+            Image(uiImage: reward.image)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                //.frame(width: UIScreen.main.bounds.width - 10, height: 216)
+                .frame(width: 340,height: 200)
+                .cornerRadius(8)
+                .overlay(
+                    Text(reward.name)
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .background(Color.black.opacity(0.7))
+                        .cornerRadius(8),
+                    alignment: .center
+                )
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                      //  .foregroundColor(.white)
+                        .frame(width: 340,height: 200)
+                       // .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                        .shadow(color: Color.gray, radius: 5, x: 0, y: 0)
+                )
+        }
+      //  .frame(maxWidth: .infinity)
+        .padding(-5)
+    }
+}
+
+
+
+struct ImagePicker: UIViewControllerRepresentable {
     @Binding var selectedImage: UIImage?
+    @Environment(\.presentationMode) private var presentationMode
 
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        @Binding var selectedImage: UIImage?
+        let parent: ImagePicker
 
-        init(selectedImage: Binding<UIImage?>) {
-            _selectedImage = selectedImage
+        init(parent: ImagePicker) {
+            self.parent = parent
         }
 
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        func imagePickerController(_ picker: UIImagePickerController,
+                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             if let uiImage = info[.originalImage] as? UIImage {
-                selectedImage = uiImage
+                parent.selectedImage = uiImage
             }
-            picker.dismiss(animated: true, completion: nil)
+
+            parent.presentationMode.wrappedValue.dismiss()
         }
 
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            picker.dismiss(animated: true, completion: nil)
+            parent.presentationMode.wrappedValue.dismiss()
         }
     }
 
-    func makeCoordinator() -> Coordinator {
-        return Coordinator(selectedImage: $selectedImage)
-    }
+    var sourceType: UIImagePickerController.SourceType = .photoLibrary
 
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
+        picker.sourceType = sourceType
         picker.delegate = context.coordinator
         return picker
     }
 
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+}
+
+
+struct aa_Previews: PreviewProvider {
+    static var previews: some View {
+        aa()
+    }
 }

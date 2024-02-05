@@ -30,7 +30,7 @@ struct TabBar: View {
                 }
             
             
-            RewardPageEmployee()
+            aa()
                 .tag(2)
                 .tabItem {
                     Image(systemName: "gift.fill")
